@@ -1,0 +1,69 @@
+GitHub. HW_2
+1. На локальном репозитории сделать ветки для:
+- Postman : git branch postman
+- Jmeter : git branch jmeter
+- CheckLists : git branch checklists 
+- Bag Reports : git branch bug_reports
+- SQL : git branch SQL
+- Charles : git branch charles
+- Mobile testing : git branch mobile_testing
+
+2. Запушить все ветки на внешний репозиторий : git push origin --all
+
+3. В ветке Bag Reports сделать текстовый документ со структурой баг репорта
+git checkout bug_reports
+touch new_file_bug.txt
+vim new_file_bug.txt
+
+Баг репорт
+Заголовок (Summary): Не переведена на русский язык форма “Feedback” на странице https://itawards.com/ru в RU версии сайта
+Скриншот (видео): Скриншот (ссылка на скриншот)
+
+Шаги к воспроизведению:
+Открыть страницу https://itawards.com
+Перевести ее на русский язык
+Обратить внимание на кнопку "Feedback"
+
+Фактический результат: Кнопка "Feedback" не перевелась на русский язык
+Ожидаемый результат: Кнопка "Feedback" переведется на русский "Обратная связь"
+Серьезность: S2
+:wq
+
+4. Запушить структуру багрепорта на внешний репозиторий : git add new_file_bug.txt
+						          git commit -a -m "new bug"
+							  git status
+							  git push --set-upstream origin bug_reports
+							
+
+5. Вмержить ветку Bag Reports в Main : git checkout main
+				       git merge bug_reports
+
+
+6. Запушить main на внешний репозиторий : git push origin
+7. В ветке CheckLists набросать структуру чек листа : 
+git checkout checklists
+touch new_checklists.txt
+vim new_checklists.txt
+
+1) Как называется Checklists
+"Список проверки" 
+2) Кем: 
+руководитель группы/ ведущий тестировщик/ тестировщик
+3) А надо ли:
+"да" - тестирование объекта/функции/свойства системы требует проверки большого количества элементов
+"нет" - нет необходимости
+      - у вас частный случай
+4) Название операции (проверки)
+5) Результат: ok/bugs/fail
+6) Комментарии
+
+8. Запушить структуру на внешний репозиторий : git add new_checklists.txt
+					       git commit -a -m "new checkLists"
+					       git status
+					       git push --set-upstream origin checklists
+
+
+9. На внешнем репозитории сделать Pull Request ветки CheckLists в main : нажать кнопку Pull Request + git merge
+
+10. Синхронизировать Внешнюю и Локальную ветки Main : git fetch
+						      git pull 
