@@ -1,0 +1,399 @@
+1) необходимо залогиниться
+POST
+http://162.55.220.72:5005/login
+login : str (кроме /)
+password : str
+
+Приходящий токен необходимо передать во все остальные запросы.
+
+login : ulya
+password : qwerty
+
+var jsonData = pm.response.json();
+var auth_token = jsonData.token;
+console.log("TOKEN = " + auth_token);
+pm.environment.set('auth_token', auth_token);
+
+===================
+дальше все запросы требуют наличие токена.
+===================
+
+2) http://162.55.220.72:5005/user_info
+req. (RAW JSON)
+POST
+age: int
+salary: int
+name: str
+auth_token
+
+
+{
+"age": "40",
+"salary": 600,
+"name": "Tereza",
+"auth_token": "/s34lfgbj/ulya/jjd909/94717kjkWpqc2287qwerty171299evny"
+
+}
+
+
+resp.
+{'start_qa_salary':salary,
+ 'qa_salary_after_6_months': salary * 2,
+ 'qa_salary_after_12_months': salary * 2.9,
+ 'person': {'u_name':[user_name, salary, age],
+                                'u_age':age,
+                                'u_salary_1.5_year': salary * 4}
+                                }
+
+Тесты:
+1) Статус код 200
+
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+
+
+
+2) Проверка структуры json в ответе.
+
+const schema = {"key": "value"};
+pm.test("Schema is valid", function() {
+pm.response.to.have.jsonSchema(schema);
+});
+
+
+var responseJson = pm.response.json();
+console.log(responseJson);
+
+
+var requestJson = JSON.parse(request.data);
+console.log(requestJson);
+
+
+
+3) В ответе указаны коэффициенты умножения salary, напишите тесты по проверке правильности результата перемножения на коэффициент.
+
+
+pm.test("Your test start_qa_salary", function() {
+    pm.expect(responseJson.start_qa_salary).to.eql(+requestJson.salary);
+});
+console.log("start_qa_salary = " + requestJson.salary);
+
+
+pm.test("Your test qa_salary_after_6_months", function() {
+    pm.expect(responseJson.qa_salary_after_6_months).to.eql(requestJson.salary*2);
+});
+console.log("qa_salary_after_6_months = " + requestJson.salary*2);
+
+
+pm.test("Your test qa_salary_after_12_months", function() {
+    pm.expect(responseJson.qa_salary_after_12_months).to.eql(requestJson.salary*2.9);
+});
+console.log("qa_salary_after_6_months = " + requestJson.salary*2.9);
+
+
+pm.test("Your test u_salary_1.5_year", function() {
+    pm.expect(responseJson.person.u_salary_1_5_year).to.eql(requestJson.salary*4);
+});
+console.log("u_salary_1.5_year = " + requestJson.salary*4);
+
+
+4) Достать значение из поля 'u_salary_1.5_year' и передать в поле salary запроса http://162.55.220.72:5005/get_test_user
+
+pm.environment.set("u_salary_1_5_year", responseJson.person['u_salary_1_5_year']);
+
+
+
+===================
+
+3) http://162.55.220.72:5005/new_data
+req.
+POST
+age: int
+salary: int
+name: str
+auth_token
+
+Resp.
+{'name':name,
+  'age': int(age),
+  'salary': [salary, str(salary*2), str(salary*3)]}
+
+Тесты:
+1) Статус код 200
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+
+
+2) Проверка структуры json в ответе.
+const schema = {"key": "value"};
+pm.test("Schema is valid", function() {
+pm.response.to.have.jsonSchema(schema);
+});
+
+
+var responseJson = pm.response.json();
+console.log(responseJson);
+
+var requestJson = request.data;
+console.log(requestJson);
+
+3) В ответе указаны коэффициенты умножения salary, напишите тесты по проверке правильности результата перемножения на коэффициент.
+
+pm.test("salary_1", function() {
+    pm.expect(responseJson.salary[0]).to.eql(requestJson.salary*1);
+});
+console.log("salary_1 = " + requestJson.salary*1);
+
+
+pm.test("salary_2", function() {
+    pm.expect(+responseJson.salary[1]).to.eql(requestJson.salary*2);
+});
+console.log("salary_2 = " + requestJson.salary*2);
+
+
+pm.test("salary_3", function() {
+    pm.expect(+responseJson.salary[2]).to.eql(requestJson.salary*3);
+});
+console.log("salary_3 = " + requestJson.salary*3);
+
+
+4) проверить, что 2-й элемент массива salary больше 1-го и 0-го
+
+if (responseJson.salary[2] > responseJson.salary[1]) {
+console.log('true');}
+else  {console.log('false')};
+
+
+if (responseJson.salary[2] > responseJson.salary[0]) {
+console.log('true');}
+else  {console.log('false')};
+
+
+
+===================
+
+4) http://162.55.220.72:5005/test_pet_info
+req.
+POST
+age: int
+weight: int
+name: str
+auth_token
+
+
+Resp.
+{'name': name,
+ 'age': age,
+ 'daily_food':weight * 0.012,
+ 'daily_sleep': weight * 2.5}
+
+
+Тесты:
+1) Статус код 200
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+
+
+
+2) Проверка структуры json в ответе.
+const schema = {"key": "value"};
+pm.test("Schema is valid", function() {
+pm.response.to.have.jsonSchema(schema);
+});
+
+
+
+3) В ответе указаны коэффициенты умножения weight, напишите тесты по проверке правильности результата перемножения на коэффициент.
+
+var responseJson = pm.response.json();
+console.log(responseJson);
+
+var requestJson = request.data;
+console.log(requestJson);
+
+pm.test("weight_1", function() {
+    pm.expect(responseJson.daily_food).to.eql(requestJson.weight*0.012);
+});
+console.log("weight_1 = " + requestJson.weight*0.012);
+
+pm.test("weight_2", function() {
+    pm.expect(responseJson.daily_sleep).to.eql(requestJson.weight*2.5);
+});
+console.log("weight_2 = " + requestJson.weight*2.5);
+
+
+
+===================
+
+5) http://162.55.220.72:5005/get_test_user
+req.
+POST
+age: int
+salary: int
+name: str
+auth_token
+
+Resp.
+{'name': name,
+ 'age':age,
+ 'salary': salary,
+ 'family':{'children':[['Alex', 24],['Kate', 12]],
+ 'u_salary_1.5_year': salary * 4}
+  }
+
+Тесты:
+1) Статус код 200
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+
+
+2) Проверка структуры json в ответе.
+const schema = {"key": "value"};
+pm.test("Schema is valid", function() {
+pm.response.to.have.jsonSchema(schema);
+});
+
+
+
+3) Проверить что занчение поля name = значению переменной name из окружения
+
+var responseJson = pm.response.json();
+console.log(responseJson);
+
+var requestJson = request.data;
+console.log(requestJson);
+
+pm.test("name", function() {
+    pm.expect(responseJson.name) == environment.name ;
+});
+console.log("name = " + environment.name);
+
+
+
+4) Проверить что занчение поля age в ответе соответсвует отправленному в запросе значению поля age
+
+pm.test("age", function() {
+    pm.expect(responseJson.age).to.eql(requestJson.age);
+});
+console.log("age = " + requestJson.age);
+
+
+
+===================
+
+6) http://162.55.220.72:5005/currency
+req.
+POST
+auth_token
+
+Resp. Передаётся список массив объектов.
+[
+{"Cur_Abbreviation": str,
+ "Cur_ID": int,
+ "Cur_Name": str
+}
+…
+{"Cur_Abbreviation": str,
+ "Cur_ID": int,
+ "Cur_Name": str
+}
+]
+
+Тесты:
+1) Можете взять любой объект из присланного списка, используйте js random.
+
+var responseJson = pm.response.json();
+console.log(responseJson);
+
+var cur = +responseJson.length;
+console.log(cur);
+var curr_code = responseJson[Math.floor(Math.random()*cur)];
+console.log(curr_code);
+
+
+В объекте возьмите Cur_ID и передать через окружение в следующий запрос.
+
+
+pm.environment.set("curr_code", curr_code.Cur_ID);
+
+ ===================
+
+7) http://162.55.220.72:5005/curr_byn
+req.
+POST
+auth_token
+curr_code: int
+
+Resp.
+{
+    "Cur_Abbreviation": str
+    "Cur_ID": int,
+    "Cur_Name": str,
+    "Cur_OfficialRate": float,
+    "Cur_Scale": int,
+    "Date": str
+}
+
+Тесты:
+1) Статус код 200
+
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+
+
+2) Проверка структуры json в ответе.
+
+const schema = {"key": "value"};
+pm.test("Schema is valid", function() {
+pm.response.to.have.jsonSchema(schema);
+});
+
+
+===============
+
+
+
+
+***
+1) получить список валют
+
+var responseJson = pm.response.json();
+console.log(responseJson);
+
+2) итерировать список валют
+
+for (var i in requestJson) { 
+console.log(i, requestJson[i]);
+};
+
+3) в каждой итерации отправлять запрос на сервер для получения курса каждой валюты
+4) если возвращается 500 код, переходим к следующей итреации
+5) если получаем 200 код, проверяем response json на наличие поля "Cur_OfficialRate"
+
+
+pm.test("json response have Cur_OfficialRate", function () {
+   pm.expect(responseJson).to.have.property("Cur_OfficialRate");
+});
+
+
+6) если поле есть, пишем в консоль инфу про фалюту в виде response
+{
+    "Cur_Abbreviation": str
+    "Cur_ID": int,
+    "Cur_Name": str,
+    "Cur_OfficialRate": float,
+    "Cur_Scale": int,
+    "Date": str
+}
+
+
+for (var i in responseJson) { 
+console.log(i, responseJson[i]);
+};
+
+7) переходим к следующей итерации
