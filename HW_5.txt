@@ -25,14 +25,12 @@ var responseJson = pm.response.json();
 console.log(responseJson);
 
 4. Проверить, что name в ответе равно name s request (name вбить руками.) 
-var name = responseJson.name
 pm.test("Your test name", function() {
     pm.expect(responseJson.name).to.eql("Tema");
 });
 console.log("NAME = " + responseJson.name);
 
 5. Проверить, что age в ответе равно age s request (age вбить руками.)
-var age = responseJson.age
 pm.test("Your test age", function() {
     pm.expect(responseJson.age).to.eql("27");
 });
@@ -40,7 +38,6 @@ console.log("AGE = " + responseJson.age);
 
 
 6. Проверить, что salary в ответе равно salary s request (salary вбить руками.)
-var salary = responseJson.salary
 pm.test("Your test salary", function() {
     pm.expect(responseJson.salary).to.eql(1500);
 });
@@ -53,7 +50,6 @@ console.log(requestJson);
 
 
 8. Проверить, что name в ответе равно name s request (name забрать из request.)
-var namee = requestJson.name; 
 pm.test("Name test", function () { 
    pm.expect(responseJson.name).to.eql(requestJson.name); 
 }); 
@@ -61,7 +57,6 @@ console.log("name = " + requestJson.name);
 
 
 9. Проверить, что age в ответе равно age s request (age забрать из request.)
-var ages = requestJson.age;
 pm.test("Your test age", function() {
     pm.expect(responseJson.age).to.eql(requestJson.age);
 });
@@ -69,7 +64,6 @@ console.log("Age = " + requestJson.age);
 
 
 10. Проверить, что salary в ответе равно salary s request (salary забрать из request.)
-var salaries = requestJson.salary;
 pm.test("Your test salary", function() {
     pm.expect(responseJson.salary).to.eql(+requestJson.salary);
 });
@@ -176,7 +170,6 @@ console.log(requestJson);
 
 
 5. Проверить, что name в ответе равно name s request (name забрать из request.)
-var name = requestJson.name;
 pm.test("Name test", function () { 
    pm.expect(responseJson.name).to.eql(requestJson.name); 
 }); 
@@ -184,7 +177,6 @@ console.log("name = " + requestJson.name);
 
 
 6. Проверить, что age в ответе равно age из request (age забрать из request.)
-var age = requestJson.age;
 pm.test("Age test", function () { 
    pm.expect(responseJson.age).to.eql(+requestJson.age); 
 }); 
